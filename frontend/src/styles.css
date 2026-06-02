@@ -1,0 +1,569 @@
+
+:root {
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #f8fafc;
+  background: #07111f;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgba(59, 130, 246, 0.22), transparent 32rem),
+    radial-gradient(circle at bottom right, rgba(239, 68, 68, 0.18), transparent 34rem),
+    #07111f;
+}
+
+button, input { font: inherit; }
+
+.app {
+  width: min(1200px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 36px 0 56px;
+}
+
+.hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  margin-bottom: 24px;
+}
+
+.eyebrow {
+  color: #93c5fd;
+  text-transform: uppercase;
+  letter-spacing: .16em;
+  font-size: 12px;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+
+h1 {
+  font-size: clamp(42px, 7vw, 84px);
+  line-height: 0.9;
+  margin: 0;
+}
+
+.subtitle {
+  color: #cbd5e1;
+  max-width: 760px;
+  font-size: 17px;
+}
+
+.searchPanel {
+  display: grid;
+  grid-template-columns: 1fr 1fr 150px auto;
+  gap: 12px;
+  align-items: end;
+  padding: 16px;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  background: rgba(15, 23, 42, 0.72);
+  border-radius: 22px;
+  backdrop-filter: blur(16px);
+  box-shadow: 0 20px 80px rgba(0,0,0,0.25);
+  margin-bottom: 18px;
+  position: relative;
+  z-index: 10;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.field label {
+  color: #94a3b8;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+
+.teamField {
+  position: relative;
+}
+
+input {
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  background: rgba(2, 6, 23, 0.72);
+  color: #f8fafc;
+  border-radius: 14px;
+  padding: 12px 14px;
+  outline: none;
+}
+
+input:focus { border-color: rgba(96, 165, 250, 0.8); }
+
+.suggestions {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  background: rgba(2, 6, 23, 0.98);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 18px 50px rgba(0,0,0,.45);
+  z-index: 50;
+}
+
+.suggestion {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 16px 1fr auto;
+  align-items: center;
+  gap: 10px;
+  text-align: left;
+  padding: 11px 12px;
+  background: transparent;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+  color: #f8fafc;
+}
+
+.suggestion:hover {
+  background: rgba(30, 41, 59, .95);
+}
+
+.suggestion small {
+  color: #94a3b8;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+}
+
+button {
+  border: 0;
+  color: #f8fafc;
+  cursor: pointer;
+}
+
+.primary, .controls button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 14px;
+  background: #2563eb;
+  padding: 12px 16px;
+  font-weight: 800;
+}
+
+.primary:disabled {
+  opacity: .65;
+  cursor: wait;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 18px;
+}
+
+.results, .vizPanel {
+  border: 1px solid rgba(148, 163, 184, 0.24);
+  background: rgba(15, 23, 42, 0.66);
+  border-radius: 24px;
+  padding: 18px;
+  backdrop-filter: blur(16px);
+}
+
+.results h2, .vizPanel h2 { margin: 0 0 12px; }
+
+.resultList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.gameCard {
+  text-align: left;
+  background: rgba(2, 6, 23, 0.7);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  border-radius: 16px;
+  padding: 13px;
+  transition: .18s ease;
+}
+
+.gameCard:hover, .gameCard.active {
+  transform: translateY(-1px);
+  border-color: rgba(96, 165, 250, .7);
+  background: rgba(30, 41, 59, .88);
+}
+
+.gameCard span, .gameCard small {
+  display: block;
+  color: #94a3b8;
+}
+
+.gameCard strong {
+  display: block;
+  margin: 5px 0;
+}
+
+.vizHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: start;
+  min-height: 70px;
+}
+
+.vizHeader p {
+  color: #cbd5e1;
+  margin: 0;
+}
+
+.timeBox {
+  text-align: right;
+  padding: 11px 14px;
+  border-radius: 16px;
+  background: rgba(2, 6, 23, .72);
+  min-width: 88px;
+}
+
+.timeBox span, .timeBox strong { display: block; }
+
+.timeBox span {
+  color: #94a3b8;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.timeBox strong { font-size: 24px; }
+
+.emptyState {
+  min-height: 420px;
+  display: grid;
+  place-items: center;
+  color: #94a3b8;
+  border: 1px dashed rgba(148, 163, 184, .34);
+  border-radius: 20px;
+}
+
+.teamsRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 44px;
+  font-weight: 950;
+  letter-spacing: -.06em;
+  margin-top: 30px;
+}
+
+.barStage {
+  position: relative;
+  height: 110px;
+  margin: 16px 0 10px;
+  border-radius: 999px;
+  background: rgba(2, 6, 23, .68);
+  overflow: hidden;
+  border: 1px solid rgba(148, 163, 184, .20);
+}
+
+.side {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+}
+
+.leftSide {
+  left: 0;
+  background: linear-gradient(90deg, rgba(255,255,255,.04), rgba(255,255,255,.01));
+}
+
+.rightSide {
+  right: 0;
+  background: linear-gradient(270deg, rgba(255,255,255,.04), rgba(255,255,255,.01));
+}
+
+.centerLine {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 5px;
+  transform: translateX(-50%);
+  background: #f8fafc;
+  box-shadow: 0 0 26px rgba(255,255,255,.75);
+  z-index: 3;
+}
+
+.leadBar {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  transition: width .22s ease;
+  box-shadow: 0 0 42px rgba(255,255,255,.18);
+}
+
+.leftBar {
+  right: 50%;
+  border-radius: 999px 0 0 999px;
+}
+
+.rightBar {
+  left: 50%;
+  border-radius: 0 999px 999px 0;
+}
+
+.diffReadout {
+  text-align: center;
+  font-size: 42px;
+  line-height: 1;
+  font-weight: 950;
+  min-height: 50px;
+  letter-spacing: -.05em;
+}
+
+.eventText {
+  margin: 18px 0 12px;
+  min-height: 48px;
+  color: #dbeafe;
+  border-radius: 16px;
+  background: rgba(2, 6, 23, .5);
+  padding: 14px;
+}
+
+.slider {
+  width: 100%;
+  padding: 0;
+  accent-color: #60a5fa;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-top: 14px;
+}
+
+.controls button { background: rgba(51, 65, 85, .9); }
+.controls .playBtn { background: #16a34a; }
+
+.speedControl {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #cbd5e1;
+  background: rgba(2, 6, 23, .5);
+  border-radius: 14px;
+  padding: 9px 12px;
+}
+
+.speedControl input {
+  width: 130px;
+  padding: 0;
+  accent-color: #60a5fa;
+}
+
+.speedControl span {
+  min-width: 42px;
+  font-weight: 800;
+}
+
+.meta {
+  color: #94a3b8;
+  margin-top: 12px;
+  font-size: 13px;
+}
+
+.error {
+  color: #fecaca;
+  background: rgba(127, 29, 29, .46);
+  border: 1px solid rgba(248, 113, 113, .4);
+  border-radius: 16px;
+  padding: 12px 14px;
+  margin-bottom: 18px;
+}
+
+@media (max-width: 900px) {
+  .searchPanel {
+    grid-template-columns: 1fr;
+  }
+
+  .layout {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .speedControl {
+    margin-left: 0;
+    width: 100%;
+  }
+}
+
+.lineChartPanel {
+  margin: 18px 0 14px;
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  background: rgba(2, 6, 23, 0.46);
+  border-radius: 18px;
+  padding: 14px;
+}
+
+.lineChartHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: #e2e8f0;
+  margin-bottom: 8px;
+}
+
+.lineChartHeader span {
+  color: #94a3b8;
+  font-size: 13px;
+}
+
+.lineChart {
+  width: 100%;
+  height: 220px;
+  display: block;
+  overflow: visible;
+}
+
+.zeroLine {
+  stroke: rgba(248, 250, 252, 0.72);
+  stroke-width: 2;
+  stroke-dasharray: 7 7;
+}
+
+.diffLine {
+  fill: none;
+  stroke: #60a5fa;
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.currentLine {
+  stroke: rgba(248, 250, 252, 0.3);
+  stroke-width: 2;
+}
+
+.currentDot {
+  stroke: #f8fafc;
+  stroke-width: 3;
+}
+
+.chartLabel {
+  fill: #94a3b8;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+/* Team-color visual refresh */
+
+body {
+  background:
+    radial-gradient(circle at top left, rgba(148, 163, 184, 0.14), transparent 28rem),
+    radial-gradient(circle at bottom right, rgba(15, 23, 42, 0.95), transparent 34rem),
+    linear-gradient(135deg, #020617 0%, #0f172a 48%, #111827 100%);
+}
+
+.hero,
+.searchPanel,
+.results,
+.vizPanel {
+  box-shadow: 0 24px 90px rgba(0, 0, 0, 0.34);
+}
+
+.searchPanel,
+.results,
+.vizPanel {
+  background: rgba(15, 23, 42, 0.76);
+  border-color: rgba(226, 232, 240, 0.16);
+}
+
+.teamsRow {
+  gap: 16px;
+  align-items: stretch;
+}
+
+.teamNameBadge {
+  flex: 1;
+  border: 2px solid;
+  border-radius: 20px;
+  padding: 14px 16px;
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02)),
+    rgba(2, 6, 23, 0.62);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.25);
+}
+
+.teamNameBadge span {
+  display: block;
+  font-size: clamp(34px, 5vw, 56px);
+  font-weight: 950;
+  line-height: .9;
+  letter-spacing: -0.07em;
+}
+
+.teamNameBadge small {
+  display: block;
+  margin-top: 8px;
+  color: #cbd5e1;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: normal;
+}
+
+.homeBadge {
+  text-align: right;
+}
+
+.barStage {
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--away-color) 13%, transparent), transparent 46%),
+    linear-gradient(270deg, color-mix(in srgb, var(--home-color) 13%, transparent), transparent 46%),
+    rgba(2, 6, 23, 0.72);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.05),
+    0 0 52px color-mix(in srgb, var(--leader-color) 25%, transparent);
+}
+
+.leadBar {
+  box-shadow:
+    0 0 28px color-mix(in srgb, var(--leader-color) 55%, transparent),
+    inset 0 0 18px rgba(255,255,255,0.16);
+}
+
+.centerLine {
+  background: #f8fafc;
+  box-shadow:
+    0 0 20px rgba(255,255,255,0.72),
+    0 0 44px rgba(255,255,255,0.22);
+}
+
+.diffReadout {
+  text-shadow: 0 0 24px currentColor;
+}
+
+.lineChartPanel {
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.055), rgba(255,255,255,0.018)),
+    rgba(2, 6, 23, 0.58);
+}
+
+.diffLine {
+  stroke-width: 4.5;
+  filter: drop-shadow(0 0 5px rgba(255,255,255,0.18));
+}
+
+.currentDot {
+  filter: drop-shadow(0 0 7px currentColor);
+}
+
+.gameCard.active {
+  box-shadow: inset 4px 0 0 rgba(96, 165, 250, .9);
+}
+
+.seasonField {
+  min-width: 140px;
+}
