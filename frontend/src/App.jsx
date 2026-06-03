@@ -139,7 +139,10 @@ function SeasonSelect({ season, setSeason }) {
       </button>
 
       {open && (
-        <div className="suggestions seasonSuggestions">
+        <div
+          className="suggestions seasonSuggestions"
+          onMouseLeave={() => setOpen(false)}
+        >
           {SEASONS.map(s => (
             <button
               key={s || 'recent'}
