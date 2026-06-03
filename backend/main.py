@@ -197,21 +197,36 @@ def matchups(
 def get_game_metadata(game_id: str) -> dict[str, Any]:
     try:
         summary = boxscoresummaryv2.BoxScoreSummaryV2(game_id=game_id, timeout=30)
-        line_score = summary.get_data_frames()[5]
+        frames = summary.get_data_frames()
+        game_summary = frames[0]
+        line_score = frames[5]
     except Exception as e:
         raise HTTPException(status_code=502, detail=f"NBA API box score failed: {e}")
 
-    if line_score.empty or len(line_score) < 2:
+    if game_summary.empty or line_score.empty or len(line_score) < 2:
         raise HTTPException(status_code=404, detail="Could not find both teams for this game.")
 
-    away = line_score.iloc[0]
-    home = line_score.iloc[1]
+    # Do NOT assume line_score row order. Use official home/visitor team IDs.
+    game_row = game_summary.iloc[0]
+
+    home_team_id = int(game_row["HOME_TEAM_ID"])
+    away_team_id = int(game_row["VISITOR_TEAM_ID"])
+
+    home_rows = line_score[line_score["TEAM_ID"].astype(int) == home_team_id]
+    away_rows = line_score[line_score["TEAM_ID"].astype(int) == away_team_id]
+
+    if home_rows.empty or away_rows.empty:
+        raise HTTPException(status_code=404, detail="Could not match home/away teams for this game.")
+
+    home = home_rows.iloc[0]
+    away = away_rows.iloc[0]
 
     def team_obj(row: pd.Series) -> dict[str, Any]:
         abbrev = str(row.get("TEAM_ABBREVIATION", ""))
         city = str(row.get("TEAM_CITY_NAME", "")).strip()
         nickname = str(row.get("TEAM_NICKNAME", "")).strip()
         name = f"{city} {nickname}".strip() or abbrev
+
         return {
             "abbrev": abbrev,
             "name": name,
@@ -221,10 +236,11 @@ def get_game_metadata(game_id: str) -> dict[str, Any]:
 
     return {
         "gameId": game_id,
-        "date": str(line_score.iloc[0].get("GAME_DATE_EST", ""))[:10],
+        "date": str(game_row.get("GAME_DATE_EST", line_score.iloc[0].get("GAME_DATE_EST", "")))[:10],
         "home": team_obj(home),
         "away": team_obj(away),
     }
+
 
 def clean_clock(clock_value: str) -> str:
     """
@@ -239,7 +255,6 @@ def clean_clock(clock_value: str) -> str:
 
     # ISO duration style: PT09M42.00S
     if s.startswith("PT"):
-        import re
         m = re.match(r"PT(?:(\d+)M)?(?:(\d+(?:\.\d+)?)S)?", s)
         if m:
             minutes = int(m.group(1) or 0)
