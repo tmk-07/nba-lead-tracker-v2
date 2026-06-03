@@ -116,7 +116,7 @@ function LeadLineChart({ events, step, home, away, maxAbsDiff }) {
 
 
 function needsLeadBarOutline(team) {
-  return team?.abbrev === 'BKN' || team?.abbrev === 'DEN'
+  return team?.abbrev === 'BKN' || team?.abbrev === 'DEN' || team?.abbrev === 'CHA'
 }
 
 function outlineStyleForTeam(team) {
