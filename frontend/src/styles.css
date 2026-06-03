@@ -659,3 +659,54 @@ select:focus {
 .seasonSuggestion small {
   display: none;
 }
+
+/* Only Nets and Nuggets get a visible lead-bar outline */
+
+.leadBar {
+  border: 2px solid var(--leader-outline, transparent);
+}
+
+.leftBar {
+  border-right: 0;
+}
+
+.rightBar {
+  border-left: 0;
+}
+
+/* Nets/Nuggets visibility outline for lead bar */
+
+.leadBar {
+  border: 2px solid var(--leader-outline, transparent);
+}
+
+.leftBar {
+  border-right: 0;
+}
+
+.rightBar {
+  border-left: 0;
+}
+
+/* Softer Nets/Nuggets visibility fix: no chunky white overlap */
+
+.leadBar {
+  border: 0 !important;
+  box-shadow:
+    inset 0 0 0 2px var(--leader-outline, transparent),
+    0 0 28px color-mix(in srgb, var(--leader-color) 45%, transparent),
+    inset 0 0 18px rgba(255,255,255,0.10);
+}
+
+.leftBar,
+.rightBar {
+  border: 0 !important;
+}
+
+.teamNameBadge span {
+  -webkit-text-stroke: 0 !important;
+}
+
+.diffReadout span {
+  -webkit-text-stroke: 0 !important;
+}

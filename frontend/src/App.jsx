@@ -115,6 +115,18 @@ function LeadLineChart({ events, step, home, away, maxAbsDiff }) {
 }
 
 
+function needsLeadBarOutline(team) {
+  return team?.abbrev === 'BKN' || team?.abbrev === 'DEN'
+}
+
+function outlineStyleForTeam(team) {
+  return needsLeadBarOutline(team)
+    ? {
+        textShadow: '0 0 1px #f8fafc, 0 0 5px rgba(248,250,252,0.35)',
+      }
+    : {}
+}
+
 function SeasonSelect({ season, setSeason }) {
   const [open, setOpen] = useState(false)
 
@@ -444,11 +456,25 @@ export default function App() {
           ) : (
             <>
               <div className="teamsRow">
-                <div className="teamNameBadge awayBadge" style={{ color: timeline.away.color, borderColor: timeline.away.color }}>
+                <div
+                  className="teamNameBadge awayBadge"
+                  style={{
+                    color: timeline.away.color,
+                    borderColor: timeline.away.color,
+                    ...outlineStyleForTeam(timeline.away),
+                  }}
+                >
                   <span>{timeline.away.abbrev}</span>
                   <small>{timeline.away.name}</small>
                 </div>
-                <div className="teamNameBadge homeBadge" style={{ color: timeline.home.color, borderColor: timeline.home.color }}>
+                <div
+                  className="teamNameBadge homeBadge"
+                  style={{
+                    color: timeline.home.color,
+                    borderColor: timeline.home.color,
+                    ...outlineStyleForTeam(timeline.home),
+                  }}
+                >
                   <span>{timeline.home.abbrev}</span>
                   <small>{timeline.home.name}</small>
                 </div>
@@ -458,6 +484,7 @@ export default function App() {
                 className="barStage"
                 style={{
                   '--leader-color': leader ? leader.color : '#94a3b8',
+                  '--leader-outline': leader && needsLeadBarOutline(leader) ? '#f8fafc' : 'transparent',
                   '--away-color': timeline.away.color,
                   '--home-color': timeline.home.color,
                 }}
@@ -483,7 +510,14 @@ export default function App() {
 
               <div className="diffReadout">
                 {leader ? (
-                  <span style={{ color: leader.color }}>{leader.abbrev} +{Math.abs(diff)}</span>
+                  <span
+                    style={{
+                      color: leader.color,
+                      ...outlineStyleForTeam(leader),
+                    }}
+                  >
+                    {leader.abbrev} +{Math.abs(diff)}
+                  </span>
                 ) : (
                   <span>Tied</span>
                 )}
