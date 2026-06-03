@@ -35,7 +35,7 @@ const SEASONS = [
 ]
 
 
-function LeadLineChart({ events, step, home, away, maxAbsDiff }) {
+function LeadLineChart({ events, step, home, away, maxAbsDiff, onSelectStep }) {
   if (!events?.length) return null
 
   const width = 760
@@ -53,6 +53,14 @@ function LeadLineChart({ events, step, home, away, maxAbsDiff }) {
   function yFor(diff) {
     const clamped = Math.max(-maxAbsDiff, Math.min(maxAbsDiff, diff))
     return padY + ((maxAbsDiff - clamped) / (maxAbsDiff * 2)) * chartH
+  }
+
+  function handleChartClick(e) {
+    const rect = e.currentTarget.getBoundingClientRect()
+    const clickX = e.clientX - rect.left
+    const percent = Math.max(0, Math.min(1, clickX / rect.width))
+    const targetStep = Math.round(percent * maxIndex)
+    onSelectStep?.(targetStep)
   }
 
   const path = events
@@ -73,7 +81,12 @@ function LeadLineChart({ events, step, home, away, maxAbsDiff }) {
         </span>
       </div>
 
-      <svg className="lineChart" viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="none">
+      <svg
+        className="lineChart clickableLineChart"
+        viewBox={`0 0 ${width} ${height}`}
+        preserveAspectRatio="none"
+        onClick={handleChartClick}
+      >
         <line
           x1={padX}
           y1={yFor(0)}
@@ -529,6 +542,10 @@ export default function App() {
                 home={timeline.home}
                 away={timeline.away}
                 maxAbsDiff={maxAbsDiff}
+                onSelectStep={(targetStep) => {
+                  setStep(targetStep)
+                  setPlaying(false)
+                }}
               />
 
               <div className="eventText">
@@ -550,7 +567,21 @@ export default function App() {
               <div className="controls">
                 <button onClick={() => setStep(0)}><SkipBack size={18} /> Start</button>
                 <button onClick={() => setStep(s => Math.max(0, s - 1))}><SkipBack size={18} /> Back</button>
-                <button className="playBtn" onClick={() => setPlaying(p => !p)}>
+                <button
+                  className="playBtn"
+                  onClick={() => {
+                    if (playing) {
+                      setPlaying(false)
+                      return
+                    }
+
+                    if (step >= events.length - 1) {
+                      setStep(0)
+                    }
+
+                    setPlaying(true)
+                  }}
+                >
                   {playing ? <Pause size={20} /> : <Play size={20} />}
                   {playing ? 'Pause' : 'Play'}
                 </button>

@@ -710,3 +710,7 @@ select:focus {
 .diffReadout span {
   -webkit-text-stroke: 0 !important;
 }
+
+.clickableLineChart {
+  cursor: pointer;
+}
