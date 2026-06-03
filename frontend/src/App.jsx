@@ -4,6 +4,36 @@ import { Play, Pause, SkipBack, SkipForward, Search } from 'lucide-react'
 
 const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:8000'
 
+const SEASONS = [
+  '',
+  '2025-26',
+  '2024-25',
+  '2023-24',
+  '2022-23',
+  '2021-22',
+  '2020-21',
+  '2019-20',
+  '2018-19',
+  '2017-18',
+  '2016-17',
+  '2015-16',
+  '2014-15',
+  '2013-14',
+  '2012-13',
+  '2011-12',
+  '2010-11',
+  '2009-10',
+  '2008-09',
+  '2007-08',
+  '2006-07',
+  '2005-06',
+  '2004-05',
+  '2003-04',
+  '2002-03',
+  '2001-02',
+  '2000-01',
+]
+
 
 function LeadLineChart({ events, step, home, away, maxAbsDiff }) {
   if (!events?.length) return null
@@ -80,6 +110,51 @@ function LeadLineChart({ events, step, home, away, maxAbsDiff }) {
           className="currentDot"
         />
       </svg>
+    </div>
+  )
+}
+
+
+function SeasonSelect({ season, setSeason }) {
+  const [open, setOpen] = useState(false)
+
+  const selectedLabel = season || 'Recent'
+
+  function choose(value) {
+    setSeason(value)
+    setOpen(false)
+  }
+
+  return (
+    <div className="field seasonField customSelectField">
+      <label>Season optional</label>
+
+      <button
+        type="button"
+        className="customSelectButton"
+        onClick={() => setOpen(o => !o)}
+      >
+        <span>{selectedLabel}</span>
+        <small>{season ? 'All matchups that season' : '10 most recent'}</small>
+      </button>
+
+      {open && (
+        <div className="suggestions seasonSuggestions">
+          {SEASONS.map(s => (
+            <button
+              key={s || 'recent'}
+              type="button"
+              className={`suggestion seasonSuggestion ${season === s ? 'selectedSeason' : ''}`}
+              onMouseDown={e => e.preventDefault()}
+              onClick={() => choose(s)}
+            >
+              <span className="seasonDot" />
+              <strong>{s || 'Recent'}</strong>
+              <small></small>
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   )
 }
@@ -311,14 +386,7 @@ export default function App() {
           teams={teams}
         />
 
-        <div className="field seasonField">
-          <label>Season optional</label>
-          <input
-            value={season}
-            onChange={e => setSeason(e.target.value)}
-            placeholder="2023-24"
-          />
-        </div>
+        <SeasonSelect season={season} setSeason={setSeason} />
 
         <button className="primary" type="submit" disabled={loading}>
           <Search size={18} />
